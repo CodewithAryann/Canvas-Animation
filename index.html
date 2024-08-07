@@ -17,6 +17,8 @@
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         const canvas = document.querySelector("canvas");
         const context = canvas.getContext("2d");
@@ -30,7 +32,7 @@
         function preloadImages(){
 
             for ( var i=1 ; i<=frame.maxIndex; i++ ){
-                const ImageUrl = `./video-frames/frame_${i.toString().padStart(4, "0")}.png`
+                const ImageUrl = `./video-frames/frame_${i.toString().padStart(4, "0")}.jpeg`
                 const img = new Image();
                 img.src = ImageUrl;
                 img.onload = ()=> {
@@ -45,7 +47,7 @@
         }
         
         function loadImage(index){
-            if (index >=0 && index <= frames.maxIndex){
+            if (index >=0 && index <= frame.maxIndex){
                 const img = images[index];
 
                 canvas.width = window.innerWidth;
@@ -66,7 +68,7 @@
                 context.imageSmoothingQuality = "high";
                 context.drawImage(img, offsetX, offsetY , newWidth , newHeight);
 
-                frames.currentIndex = index;
+                frame.currentIndex = index;
 
 
 
@@ -78,15 +80,13 @@
                 scrollTrigger:{
                     trigger : ".parent",
                     start : " top top",
-                    scrub : true,
-
-
+                    scrub : 2
                 }
             })
-            tl.to(frames, {
-                currentIndex: frames.maxIndex,
+            tl.to(frame, {
+                currentIndex: frame.maxIndex,
                 onUpdate: function() {
-                    loadImage(Math.floor(frames.currentIndex))
+                    loadImage(Math.floor(frame.currentIndex))
                 }
             })
         }
