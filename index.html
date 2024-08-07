@@ -37,6 +37,7 @@
                     imagesLoaded++;
                     if ( imagesLoaded === frame.maxIndex){
                         loadImage( frame.currentIndex);
+                        startAnimation();
                     }
                 }
                 images.push(img);
@@ -70,6 +71,24 @@
 
 
             }
+        }
+        
+        function startAnimation(){
+            var tl = gsap.timeline({
+                scrollTrigger:{
+                    trigger : ".parent",
+                    start : " top top",
+                    scrub : true,
+
+
+                }
+            })
+            tl.to(frames, {
+                currentIndex: frames.maxIndex,
+                onUpdate: function() {
+                    loadImage(Math.floor(frames.currentIndex))
+                }
+            })
         }
         preloadImages();
     </script>
