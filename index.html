@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="w-full bg-zinc-900">
+    <div class="w-full ">
         <div class="parent relative left-0 top-0 w-full h-[700vh]">
             <div class="w-full sticky left-0 top-0 h-screen ">
                 <canvas class="w-full h-screen" id="frame"></canvas>
@@ -18,16 +18,60 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        const canvas = document.querySelector("canvas");
+        const context = canvas.getContext("2d");
         const frame = {
             currentIndex: 0,
             maxIndex: 693
         };
+        let imagesLoaded = 0;
+        const images = [];
 
         function preloadImages(){
-            for ( var i=0 ; i<frame.maxIndex; i++ ){
-                const ImageUrl = `./video-frames/frame_${}`
+
+            for ( var i=1 ; i<=frame.maxIndex; i++ ){
+                const ImageUrl = `./video-frames/frame_${i.toString().padStart(4, "0")}.png`
+                const img = new Image();
+                img.src = ImageUrl;
+                img.onload = ()=> {
+                    imagesLoaded++;
+                    if ( imagesLoaded === frame.maxIndex){
+                        loadImage( frame.currentIndex);
+                    }
+                }
+                images.push(img);
             }
         }
+        
+        function loadImage(index){
+            if (index >=0 && index <= frames.maxIndex){
+                const img = images[index];
+
+                canvas.width = window.innerWidth;
+                canvas.height= window.innerHeight;
+
+                const scaleX = canvas.width /img.width;
+                const scaleY = canvas.height/ img.height;
+                const scale = Math.max(scaleX, scaleY);
+
+                const newWidth = img.width * scale;
+                const newHeight = img.height * scale;
+
+                const offsetX = (canvas.width - newWidth)/2;
+                const offsetY = (canvas.height - newHeight)/2;
+
+                context.clearRect(0,0, canvas.width, canvas.height);
+                context.imageSmoothingEnabled = true;
+                context.imageSmoothingQuality = "high";
+                context.drawImage(img, offsetX, offsetY , newWidth , newHeight);
+
+                frames.currentIndex = index;
+
+
+
+            }
+        }
+        preloadImages();
     </script>
 </body>
 </html>
